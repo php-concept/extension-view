@@ -1,7 +1,6 @@
 {
     "name": "php-concept/extension-view",
     "description": "Concept View extension — view contracts, response factory, registries",
-    "version": "1.0.0",
     "type": "library",
     "license": "MIT",
     "autoload": {

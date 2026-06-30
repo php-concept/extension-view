@@ -21,7 +21,7 @@ final class ViewServiceProvider extends AbstractServiceProvider
     private const string EXTENSION_NAME = 'view';
 
     /**
-     * @param array<string, string> $paths
+     * @param array<string, string> $paths namespace => absolute filesystem path
      * @param array<string, string> $contexts
      * @param array<int, class-string> $extensions
      */
