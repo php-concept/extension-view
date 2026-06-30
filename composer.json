@@ -1,0 +1,21 @@
+{
+    "name": "php-concept/extension-view",
+    "description": "Concept View extension — view contracts, response factory, registries",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Concept\\Extensions\\View\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.4",
+        "php-concept/core-2": "^1.0",
+        "php-concept/extension-http": "^1.0",
+        "php-concept/extension-event": "^1.0",
+        "league/container": "^5.1",
+        "psr/event-dispatcher": "^1.0",
+        "psr/http-message": "^2.0"
+    }
+}
