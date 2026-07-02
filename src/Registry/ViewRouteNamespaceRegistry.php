@@ -2,13 +2,13 @@
 
 namespace Concept\Extensions\View\Registry;
 
-final class ViewContextRegistry
+final class ViewRouteNamespaceRegistry
 {
     /** @var array<string, string> */
     private array $items = [];
 
     /**
-     * @param array<string, string> $values
+     * @param array<string, string> $values route prefix => view namespace
      */
     public function append(array $values): void
     {

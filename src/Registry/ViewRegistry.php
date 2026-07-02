@@ -7,7 +7,7 @@ final class ViewRegistry
     public function __construct(
         private readonly ViewPathRegistry $viewPathRegistry,
         private readonly ViewExtensionRegistry $viewExtensionRegistry,
-        private readonly ViewContextRegistry $viewContextRegistry,
+        private readonly ViewRouteNamespaceRegistry $viewRouteNamespaceRegistry,
     ) {}
 
     public function paths(): ViewPathRegistry
@@ -20,8 +20,8 @@ final class ViewRegistry
         return $this->viewExtensionRegistry;
     }
 
-    public function contexts(): ViewContextRegistry
+    public function routeNamespace(): ViewRouteNamespaceRegistry
     {
-        return $this->viewContextRegistry;
+        return $this->viewRouteNamespaceRegistry;
     }
 }

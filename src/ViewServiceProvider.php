@@ -2,18 +2,19 @@
 
 namespace Concept\Extensions\View;
 
+use Concept\Core\Container\ContainerDependency;
 use Concept\Core\Http\Contracts\RequestContextInterface;
 use Concept\Extensions\Event\Events\ExtensionAwakened;
 use Concept\Extensions\Event\Support\EventDispatcherResolver;
 use Concept\Extensions\Http\Contracts\ResponseFactoryInterface;
 use Concept\Extensions\View\Contracts\ViewInterface;
 use Concept\Extensions\View\Contracts\ViewResponseFactoryInterface;
-use Concept\Extensions\View\Registry\ViewContextRegistry;
+use Concept\Extensions\View\Factory\ViewResponseFactory;
 use Concept\Extensions\View\Registry\ViewExtensionRegistry;
 use Concept\Extensions\View\Registry\ViewPathRegistry;
 use Concept\Extensions\View\Registry\ViewRegistry;
-use Concept\Extensions\View\View\ViewContextResolver;
-use Concept\Extensions\View\View\ViewResponseFactory;
+use Concept\Extensions\View\Registry\ViewRouteNamespaceRegistry;
+use Concept\Extensions\View\Support\ViewRouteNamespaceResolver;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 
 final class ViewServiceProvider extends AbstractServiceProvider
@@ -22,20 +23,20 @@ final class ViewServiceProvider extends AbstractServiceProvider
 
     /**
      * @param array<string, string> $paths namespace => absolute filesystem path
-     * @param array<string, string> $contexts
      * @param array<int, class-string> $extensions
+     * @param array<string, string> $routeNamespace
      */
     public function __construct(
         private readonly array $paths = [],
-        private readonly array $contexts = [],
         private readonly array $extensions = [],
+        private readonly array $routeNamespace = [],
     ) {}
 
     public function provides(string $id): bool
     {
         return in_array($id, [
             ViewRegistry::class,
-            ViewContextResolver::class,
+            ViewRouteNamespaceResolver::class,
             ViewResponseFactoryInterface::class,
         ], true);
     }
@@ -56,26 +57,26 @@ final class ViewServiceProvider extends AbstractServiceProvider
             $viewExtensionRegistry = new ViewExtensionRegistry();
             $viewExtensionRegistry->append($this->extensions);
 
-            $viewContextRegistry = new ViewContextRegistry();
-            $viewContextRegistry->append($this->contexts);
+            $viewRouteNamespaceRegistry = new ViewRouteNamespaceRegistry();
+            $viewRouteNamespaceRegistry->append($this->routeNamespace);
 
-            return new ViewRegistry($viewPathRegistry, $viewExtensionRegistry, $viewContextRegistry);
+            return new ViewRegistry($viewPathRegistry, $viewExtensionRegistry, $viewRouteNamespaceRegistry);
         })->setShared(true);
 
-        $container->add(ViewContextResolver::class, function() use ($container): ViewContextResolver {
+        $container->add(ViewRouteNamespaceResolver::class, function() use ($container): ViewRouteNamespaceResolver {
             /** @var ViewRegistry $viewRegistry */
-            $viewRegistry = $container->get(ViewRegistry::class);
+            $viewRegistry = ContainerDependency::get($container, ViewRegistry::class);
 
-            return new ViewContextResolver($viewRegistry->contexts());
+            return new ViewRouteNamespaceResolver($viewRegistry->routeNamespace());
         })->setShared(true);
 
         $container->add(ViewResponseFactoryInterface::class, function() use ($container): ViewResponseFactory {
             /** @var ResponseFactoryInterface $responseFactory */
-            $responseFactory = $container->get(ResponseFactoryInterface::class);
+            $responseFactory = ContainerDependency::get($container, ResponseFactoryInterface::class);
             /** @var ViewInterface $view */
-            $view = $container->get(ViewInterface::class);
+            $view = ContainerDependency::get($container, ViewInterface::class);
             /** @var RequestContextInterface $requestContext */
-            $requestContext = $container->get(RequestContextInterface::class);
+            $requestContext = ContainerDependency::get($container, RequestContextInterface::class);
 
             return new ViewResponseFactory($responseFactory, $view, $requestContext);
         })->setShared(true);

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Concept\Extensions\View\View;
+namespace Concept\Extensions\View\Factory;
 
 use Concept\Core\Http\Contracts\RequestContextInterface;
 use Concept\Extensions\Http\Contracts\ResponseFactoryInterface;
