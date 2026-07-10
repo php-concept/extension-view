@@ -13,6 +13,7 @@
         "php-concept/core-2": "^1.0",
         "php-concept/extension-http": "^1.0",
         "php-concept/extension-event": "^1.0",
+        "php-concept/support": "^1.0",
         "league/container": "^5.1",
         "psr/event-dispatcher": "^1.0",
         "psr/http-message": "^2.0"

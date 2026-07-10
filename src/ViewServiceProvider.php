@@ -2,6 +2,7 @@
 
 namespace Concept\Extensions\View;
 
+use Closure;
 use Concept\Core\Container\ContainerDependency;
 use Concept\Core\Http\Contracts\RequestContextInterface;
 use Concept\Extensions\Event\Events\ExtensionAwakened;
@@ -15,6 +16,7 @@ use Concept\Extensions\View\Registry\ViewPathRegistry;
 use Concept\Extensions\View\Registry\ViewRegistry;
 use Concept\Extensions\View\Registry\ViewRouteNamespaceRegistry;
 use Concept\Extensions\View\Support\ViewRouteNamespaceResolver;
+use Concept\Support\FactoryResolver;
 use League\Container\ServiceProvider\AbstractServiceProvider;
 
 final class ViewServiceProvider extends AbstractServiceProvider
@@ -22,11 +24,17 @@ final class ViewServiceProvider extends AbstractServiceProvider
     private const string EXTENSION_NAME = 'view';
 
     /**
+     * @param Closure(): mixed $responseFactoryFactory
+     * @param Closure(): mixed $viewFactory
+     * @param Closure(): mixed $requestContextFactory
      * @param array<string, string> $paths namespace => absolute filesystem path
      * @param array<int, class-string> $extensions
      * @param array<string, string> $routeNamespace
      */
     public function __construct(
+        private readonly Closure $responseFactoryFactory,
+        private readonly Closure $viewFactory,
+        private readonly Closure $requestContextFactory,
         private readonly array $paths = [],
         private readonly array $extensions = [],
         private readonly array $routeNamespace = [],
@@ -70,13 +78,18 @@ final class ViewServiceProvider extends AbstractServiceProvider
             return new ViewRouteNamespaceResolver($viewRegistry->routeNamespace());
         })->setShared(true);
 
-        $container->add(ViewResponseFactoryInterface::class, function() use ($container): ViewResponseFactory {
-            /** @var ResponseFactoryInterface $responseFactory */
-            $responseFactory = ContainerDependency::get($container, ResponseFactoryInterface::class);
-            /** @var ViewInterface $view */
-            $view = ContainerDependency::get($container, ViewInterface::class);
-            /** @var RequestContextInterface $requestContext */
-            $requestContext = ContainerDependency::get($container, RequestContextInterface::class);
+        $container->add(ViewResponseFactoryInterface::class, function(): ViewResponseFactory {
+            $responseFactory = FactoryResolver::required(
+                $this->responseFactoryFactory,
+                ResponseFactoryInterface::class,
+                'Response factory result',
+            );
+            $view = FactoryResolver::required($this->viewFactory, ViewInterface::class, 'View factory result');
+            $requestContext = FactoryResolver::required(
+                $this->requestContextFactory,
+                RequestContextInterface::class,
+                'Request context factory result',
+            );
 
             return new ViewResponseFactory($responseFactory, $view, $requestContext);
         })->setShared(true);
