@@ -7,7 +7,7 @@ use Concept\Extensions\Http\Contracts\ResponseFactoryInterface;
 use Concept\Extensions\Http\Protocol\HttpHeader;
 use Concept\Extensions\Http\Protocol\HttpStatusCode;
 use Concept\Extensions\Http\Protocol\HttpValue;
-use Concept\Extensions\Http\Requests\RequestAttribute;
+use Concept\Extensions\View\Requests\RequestAttribute;
 use Concept\Extensions\View\Contracts\ViewInterface;
 use Concept\Extensions\View\Contracts\ViewResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
