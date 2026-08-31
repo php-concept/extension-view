@@ -8,4 +8,9 @@ interface ViewInterface
      * @param array<string, mixed> $data
      */
     public function render(string $viewName, array $data = []): string;
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public function renderString(string $template, array $data = []): string;
 }
