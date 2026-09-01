@@ -1,6 +1,6 @@
 {
     "name": "php-concept/extension-view",
-    "description": "Concept View extension — view contracts, response factory, registries",
+    "description": "Concept View extension \u2014 view contracts, response factory, registries",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -17,5 +17,16 @@
         "league/container": "^5.1",
         "psr/event-dispatcher": "^1.0",
         "psr/http-message": "^2.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     }
 }
